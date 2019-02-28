@@ -1,0 +1,85 @@
+<style>
+	.rect {
+		fill: black;
+	}
+	.rect.red {
+		fill: red;
+	}
+	.rect.pRed {
+		fill: red;
+	}
+	.rect.black {
+		fill: black;
+	}
+</style>
+<svg width="400" height="80" style="background-color: #bada55" >
+    <path onclick="rectSelected(this)" onmouseover="markRed(this)" onmouseout="unmarkRed()" class="rect1 rect" d="M0 0 h 80 v 80 h -80 Z"></path>
+    <path onclick="rectSelected(this)" onmouseover="markRed(this)" onmouseout="unmarkRed()" class="rect2 rect" d="M80 0 h 80 v 80 h -80 Z"></path>
+    <path onclick="rectSelected(this)" onmouseover="markRed(this)" onmouseout="unmarkRed()" class="rect3 rect" d="M160 0 h 80 v 80 h -80 Z"></path>
+    <path onclick="rectSelected(this)" onmouseover="markRed(this)" onmouseout="unmarkRed()" class="rect4 rect" d="M240 0 h 80 v 80 h -80 Z"></path>
+    <path onclick="rectSelected(this)" onmouseover="markRed(this)" onmouseout="unmarkRed()" class="rect5 rect" d="M320 0 h 80 v 80 h -80 Z"></path>
+</svg>
+<script type="text/javascript">
+	const urlParams = new URLSearchParams(window.location.search);
+	const barVersion = urlParams.get('barVersion');
+	if(barVersion){
+		function rectSelected(item) {
+			unmarkRed('pRed');
+			markRed(item,'pRed');
+		}
+		function markRed(el, cl){
+			if(cl === undefined)cl = 'red';
+			var rects = document.getElementsByClassName('rect');
+			for(var i = 0; i < rects.length; i++){
+				if(el.classList[0] >= rects[i].classList[0]) rects[i].classList.add(cl);
+				else rects[i].classList.add('black');
+			}
+		}
+		function unmarkRed(cl){
+			if(cl === undefined)cl = 'red';
+			var rects = document.getElementsByClassName('rect');
+			for(var i = 0; i < rects.length; i++){
+				rects[i].classList.remove(cl);
+				rects[i].classList.remove('black');
+			}
+		}
+	}else{
+		var firstSelected = null;
+		function rectSelected(item) {
+			if(firstSelected === null){
+				firstSelected = item;
+				var rects = document.getElementsByClassName('rect');
+				for(var i = 0; i < rects.length; i++){
+					rects[i].classList.remove('pRed');
+				}
+				item.classList.add('pRed');
+			} else {
+				markRed(item,'pRed');
+				firstSelected = null;
+			}
+		}
+		function markRed(el, cl){
+			if(cl === undefined)cl = 'red';
+			if(firstSelected != null){
+				var rects = document.getElementsByClassName('rect');
+				if (el.classList[0] > firstSelected.classList[0]) {
+					for(var i = 0; i < rects.length; i++){
+						if(firstSelected.classList[0] <= rects[i].classList[0] && el.classList[0] >= rects[i].classList[0]) rects[i].classList.add(cl);
+					}
+				} else {
+					for(var i = 0; i < rects.length; i++){
+						if(el.classList[0] <= rects[i].classList[0] && firstSelected.classList[0] >= rects[i].classList[0]) rects[i].classList.add(cl);
+					}
+				}
+			}
+		}
+		function unmarkRed(cl){
+			if(cl === undefined)cl = 'red';
+			var rects = document.getElementsByClassName('rect');
+			for(var i = 0; i < rects.length; i++){
+				rects[i].classList.remove(cl);
+				rects[i].classList.remove('black');
+			}
+		}
+	}
+</script>
